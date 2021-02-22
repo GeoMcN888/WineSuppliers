@@ -1,6 +1,7 @@
 package com.ait.wine;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -27,6 +28,27 @@ public class SupplierDAO {
 			ConnectionHelper.close(c);
 		}
         return list;
+    }
+	
+    public Supplier findById(int id) {
+    	String sql = "SELECT * FROM supplier WHERE id = ? ";
+        Supplier supplier = null;
+        Connection c = null;
+        try {
+            c = ConnectionHelper.getConnection();
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+            	supplier = processRow(rs);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+		} finally {
+			ConnectionHelper.close(c);
+		}
+        return supplier;
     }
 	
     protected Supplier processRow(ResultSet rs) throws SQLException {
