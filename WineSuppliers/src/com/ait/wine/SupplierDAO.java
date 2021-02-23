@@ -59,4 +59,27 @@ public class SupplierDAO {
         return supplier;
     }
 
+    public List<Supplier> findByName(String name) {
+        List<Supplier> list = new ArrayList<Supplier>();
+        Connection c = null;
+    	String sql = "SELECT * FROM supplier as e " +
+			"WHERE UPPER(name) LIKE ? " +	
+			"ORDER BY name";
+        try {
+            c = ConnectionHelper.getConnection();
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setString(1, "%" + name.toUpperCase() + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(processRow(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+		} finally {
+			ConnectionHelper.close(c);
+		}
+        return list;
+    }
+    
 }

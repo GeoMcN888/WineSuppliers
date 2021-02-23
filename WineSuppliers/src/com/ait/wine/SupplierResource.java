@@ -28,5 +28,13 @@ public class SupplierResource {
 		Supplier supplier = dao.findById(id);
 		return Response.status(200).entity(supplier).build();
 	}
+	
+	@GET @Path("search/{query}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response findByName(
+			@PathParam("query") String name){
+		List<Supplier> suppliers= dao.findByName(name);
+		return Response.status(200).entity(suppliers).build();
+	}
 
 }
