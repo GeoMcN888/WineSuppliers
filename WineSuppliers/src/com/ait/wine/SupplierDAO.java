@@ -82,4 +82,43 @@ public class SupplierDAO {
         return list;
     }
     
+    public Supplier create(Supplier resource) {
+        Connection c = null;
+        PreparedStatement ps = null;
+        try {
+            c = ConnectionHelper.getConnection();
+            ps = c.prepareStatement("INSERT INTO supplier (name, country) VALUES (?, ?)",
+                new String[] { "ID" });
+            ps.setString(1, resource.getName());
+            ps.setString(2, resource.getCountry());
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            rs.next();
+            int id = rs.getInt(1);
+            resource.setId(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+		} finally {
+			ConnectionHelper.close(c);
+		}
+        return resource;
+    }
+    
+    public boolean remove(int id) {
+        Connection c = null;
+        try {
+            c = ConnectionHelper.getConnection();
+            PreparedStatement ps = c.prepareStatement("DELETE FROM supplier WHERE id=?");
+            ps.setInt(1, id);
+            int count = ps.executeUpdate();
+            return count == 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+		} finally {
+			ConnectionHelper.close(c);
+		}
+    }
+    
 }
