@@ -78,5 +78,11 @@ public class WineResource {
 		return Response.status(204).build();
 	}
 
+	@GET @Path("{id}/suppliers")
+	@Produces({ MediaType.APPLICATION_JSON})
+	public Response findSuppliersByWineId(@PathParam("id") int id) {
+		List<Supplier> suppliers = dao.findSuppliersByWineId(id);
+		return Response.status(200).entity(suppliers).build();
+	}
 
 }

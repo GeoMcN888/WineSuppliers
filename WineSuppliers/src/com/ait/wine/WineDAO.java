@@ -22,7 +22,7 @@ public class WineDAO {
             Statement s = c.createStatement();
             ResultSet rs = s.executeQuery(sql);
             while (rs.next()) {
-                list.add(utility.processRow(rs));
+                list.add(utility.processWineRow(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -46,7 +46,7 @@ public class WineDAO {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                wine = utility.processRow(rs);
+                wine = utility.processWineRow(rs);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,7 +70,7 @@ public class WineDAO {
             ps.setString(1, "%" + name.toUpperCase() + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(utility.processRow(rs));
+                list.add(utility.processWineRow(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -97,7 +97,7 @@ public class WineDAO {
             ps.setString(2, "%" + grapes.toUpperCase() + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(utility.processRow(rs));
+                list.add(utility.processWineRow(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -106,6 +106,29 @@ public class WineDAO {
 			ConnectionHelper.close(c);
 		}
         return list;
+    }
+    
+    public List<Supplier> findSuppliersByWineId(int id) {
+    	String sql = "SELECT * FROM wine "
+    			+ "JOIN supplier_wines on (wine.id=supplier_wines.wine_id) "
+    			+ "WHERE supplier_id = ?";
+        List<Supplier> supplier = new ArrayList<>();
+        Connection c = null;
+        try {
+            c = ConnectionHelper.getConnection();
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+            	supplier.add(utility.processSupplierRow(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+		} finally {
+			ConnectionHelper.close(c);
+		}
+        return supplier;
     }
 
 

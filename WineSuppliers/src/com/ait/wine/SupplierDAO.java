@@ -21,7 +21,7 @@ public class SupplierDAO {
             Statement s = c.createStatement();
             ResultSet rs = s.executeQuery(sql);
             while (rs.next()) {
-                list.add(processRow(rs));
+                list.add(utility.processSupplierRow(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,7 +42,7 @@ public class SupplierDAO {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-            	supplier = processRow(rs);
+            	supplier = utility.processSupplierRow(rs);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,14 +53,6 @@ public class SupplierDAO {
         return supplier;
     }
 	
-    protected Supplier processRow(ResultSet rs) throws SQLException {
-    	Supplier supplier = new Supplier();
-    	supplier.setId(rs.getInt("id"));
-    	supplier.setName(rs.getString("name"));
-    	supplier.setCountry(rs.getString("country"));
-        return supplier;
-    }
-
     public List<Supplier> findByName(String name) {
         List<Supplier> list = new ArrayList<Supplier>();
         Connection c = null;
@@ -73,7 +65,7 @@ public class SupplierDAO {
             ps.setString(1, "%" + name.toUpperCase() + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(processRow(rs));
+                list.add(utility.processSupplierRow(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,7 +88,7 @@ public class SupplierDAO {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                wines.add(utility.processRow(rs));
+                wines.add(utility.processWineRow(rs));
             }
         } catch (Exception e) {
             e.printStackTrace();
