@@ -56,5 +56,12 @@ public class SupplierResource {
 		dao.remove(id);
 		return Response.status(204).build();
 	}
+	
+	@GET @Path("{id}/wines")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response findWinesBySupplier(@PathParam("id") int id) {
+		List<Wine> wines = dao.findWinesBySupplierId(id);
+		return Response.status(200).entity(wines).build();
+	}
 
 }

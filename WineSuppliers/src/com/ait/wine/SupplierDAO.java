@@ -10,6 +10,8 @@ import java.util.List;
 
 public class SupplierDAO {
 	
+	Utility utility = new Utility();
+	
 	public List<Supplier> findAll() {
         List<Supplier> list = new ArrayList<>();
         Connection c = null;
@@ -82,6 +84,29 @@ public class SupplierDAO {
         return list;
     }
     
+    public List<Wine> findWinesBySupplierId(int id) {
+    	String sql = "SELECT * FROM wine "
+    			+ "JOIN supplier_wines on (wine.id=supplier_wines.wine_id) "
+    			+ "WHERE supplier_id = ?";
+        List<Wine> wines = new ArrayList<>();
+        Connection c = null;
+        try {
+            c = ConnectionHelper.getConnection();
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                wines.add(utility.processRow(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+		} finally {
+			ConnectionHelper.close(c);
+		}
+        return wines;
+    }
+       
     public Supplier create(Supplier resource) {
         Connection c = null;
         PreparedStatement ps = null;
@@ -105,6 +130,7 @@ public class SupplierDAO {
         return resource;
     }
     
+ 
     public boolean remove(int id) {
         Connection c = null;
         try {

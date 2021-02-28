@@ -10,6 +10,8 @@ import java.util.List;
 
 
 public class WineDAO {
+	
+	Utility utility = new Utility();
 
     public List<Wine> findAll() {
         List<Wine> list = new ArrayList<Wine>();
@@ -20,7 +22,7 @@ public class WineDAO {
             Statement s = c.createStatement();
             ResultSet rs = s.executeQuery(sql);
             while (rs.next()) {
-                list.add(processRow(rs));
+                list.add(utility.processRow(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -44,7 +46,7 @@ public class WineDAO {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                wine = processRow(rs);
+                wine = utility.processRow(rs);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,7 +70,7 @@ public class WineDAO {
             ps.setString(1, "%" + name.toUpperCase() + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(processRow(rs));
+                list.add(utility.processRow(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -95,7 +97,7 @@ public class WineDAO {
             ps.setString(2, "%" + grapes.toUpperCase() + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(processRow(rs));
+                list.add(utility.processRow(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -179,26 +181,5 @@ public class WineDAO {
 		} finally {
 			ConnectionHelper.close(c);
 		}
-    }
-
-
-
-
-
-
-    
-   
-    protected Wine processRow(ResultSet rs) throws SQLException {
-        Wine wine = new Wine();
-        wine.setId(rs.getInt("id"));
-        wine.setName(rs.getString("name"));
-        wine.setGrapes(rs.getString("grapes"));
-        wine.setCountry(rs.getString("country"));
-        wine.setRegion(rs.getString("region"));
-        wine.setYear(rs.getString("year"));
-        wine.setPicture(rs.getString("picture"));
-        wine.setDescription(rs.getString("description"));
-        return wine;
-    }
-    
+    }    
 }
